@@ -29,5 +29,5 @@ jobs:
       # Step 4: Execute Python script
       - name: Execute Python script
         env:
-          BLOB_CONN_STRING: ${{ secrets.BLOB_CONNECTION_KEY }} # Azure Blob Storage connection string
+          BLOB_CONNECTION_KEY: ${{ secrets.BLOB_CONNECTION_KEY }} # Azure Blob Storage connection string
         run: python main.py
