@@ -2,7 +2,7 @@ name: update league data
 
 on:
   schedule:
-    - cron: '0 0 * * 6,0' # Runs at 00:00 every Saturday and Sunday
+    - cron: '* * * * *' # Runs at 00:00 every Saturday and Sunday
   workflow_dispatch:
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.11'
 
       # Step 3: Install Python packages
       - name: Install Python packages
@@ -29,5 +29,6 @@ jobs:
       # Step 4: Execute Python script
       - name: Execute Python script
         env:
-          BLOB_CONN_STRING: ${{ secrets.BLOB_CONN_STRING }} # Azure Blob Storage connection string
+          BLOB_CONNECTION_KEY: ${{ secrets.BLOB_CONNECTION_KEY }} # Azure Blob Storage connection string
+          AZURE_CONTAINER_NAME: ${{ secrets.AZURE_CONTAINER_NAME }}
         run: python main.py
