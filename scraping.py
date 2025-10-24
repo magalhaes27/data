@@ -68,7 +68,7 @@ def top_scorers():
 def detail_top():
     url = 'https://www.worldfootball.net/goalgetter/eng-premier-league-2023-2024/'
     headers = []
-    driver = webdriver.Safari()
+    driver = webdriver.Chrome()
 
     try:
         driver.implicitly_wait(2)
