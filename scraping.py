@@ -108,7 +108,7 @@ def player_table():
     def player(ev):
         url = ev
         headers = []
-        driver = webdriver.Safari()
+        driver = webdriver.Chrome()
         try:
             driver.implicitly_wait(2)
             driver.get(url)
@@ -139,7 +139,7 @@ def player_table():
 def all_time_table():
     url = 'https://www.worldfootball.net/alltime_table/eng-premier-league/pl-only/'
     headers = ['Pos', '#', 'Team', 'Matches', 'Wins', 'Draws', 'Losses', 'Goals', 'Dif', 'Points']
-    driver = webdriver.Safari()
+    driver = webdriver.Chrome()
 
     try:    
         driver.implicitly_wait(2)
@@ -162,7 +162,7 @@ def all_time_table():
 def all_time_winner_club():
     url = 'https://www.worldfootball.net/winner/eng-premier-league/'
     headers = []
-    driver = webdriver.Safari()
+    driver = webdriver.Chrome()
     try:
         driver.implicitly_wait(2)
         driver.get(url)
@@ -190,7 +190,7 @@ def all_time_winner_club():
 def top_scorers_seasons():
     url = 'https://www.worldfootball.net/top_scorer/eng-premier-league/'
     headers = ['Season', '#', 'Top scorer', '#', 'Team', 'Goals']
-    driver = webdriver.Safari()
+    driver = webdriver.Chrome()
 
     try:
         driver.implicitly_wait(2)
@@ -215,7 +215,7 @@ def top_scorers_seasons():
 def goals_per_season():
     url = 'https://www.worldfootball.net/stats/eng-premier-league/1/'
     headers = []
-    driver = webdriver.Safari()
+    driver = webdriver.Chrome()
 
     try:
         driver.implicitly_wait(2)
