@@ -90,7 +90,7 @@ def detail_top():
 
     try:
         driver.get(url)
-        driver.implicitly_wait(5)
+        driver.implicitly_wait(2)
         table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
 
         for i in table.find_elements(By.TAG_NAME,'th'):
@@ -141,9 +141,9 @@ def player_table():
         user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
         chrome_options.add_argument(f'user-agent={user_agent}')
         driver = webdriver.Chrome(options=chrome_options)
+        driver.set_page_load_timeout(10)
 
         try:
-            driver.implicitly_wait(2)
             driver.get(url)
             table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
 
