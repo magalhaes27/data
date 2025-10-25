@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import pandas as pd
 
 def league_table():
     url = 'https://www.bbc.com/sport/football/premier-league/table'
@@ -68,11 +69,28 @@ def top_scorers():
 def detail_top():
     url = 'https://www.worldfootball.net/goalgetter/eng-premier-league-2023-2024/'
     headers = []
-    driver = webdriver.Chrome()
+    # Set up Selenium WebDriver with options
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--proxy-server='direct://'")
+    chrome_options.add_argument("--proxy-bypass-list=*")
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument('--headless=new')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument('--allow-running-insecure-content')
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+    chrome_options.add_argument(f'user-agent={user_agent}')
+    # Initialize WebDriver
+    driver = webdriver.Chrome(options=chrome_options)
+
 
     try:
-        driver.implicitly_wait(2)
         driver.get(url)
+        driver.implicitly_wait(5)
         table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
 
         for i in table.find_elements(By.TAG_NAME,'th'):
@@ -108,7 +126,22 @@ def player_table():
     def player(ev):
         url = ev
         headers = []
-        driver = webdriver.Chrome()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--window-size=1920,1080")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--proxy-server='direct://'")
+        chrome_options.add_argument("--proxy-bypass-list=*")
+        chrome_options.add_argument("--start-maximized")
+        chrome_options.add_argument('--headless=new')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument('--allow-running-insecure-content')
+        user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+        chrome_options.add_argument(f'user-agent={user_agent}')
+        driver = webdriver.Chrome(options=chrome_options)
+
         try:
             driver.implicitly_wait(2)
             driver.get(url)
@@ -139,7 +172,22 @@ def player_table():
 def all_time_table():
     url = 'https://www.worldfootball.net/alltime_table/eng-premier-league/pl-only/'
     headers = ['Pos', '#', 'Team', 'Matches', 'Wins', 'Draws', 'Losses', 'Goals', 'Dif', 'Points']
-    driver = webdriver.Chrome()
+
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--proxy-server='direct://'")
+    chrome_options.add_argument("--proxy-bypass-list=*")
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument('--headless=new')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument('--allow-running-insecure-content')
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+    chrome_options.add_argument(f'user-agent={user_agent}')
+    driver = webdriver.Chrome(options=chrome_options)
 
     try:    
         driver.implicitly_wait(2)
@@ -162,7 +210,21 @@ def all_time_table():
 def all_time_winner_club():
     url = 'https://www.worldfootball.net/winner/eng-premier-league/'
     headers = []
-    driver = webdriver.Chrome()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--proxy-server='direct://'")
+    chrome_options.add_argument("--proxy-bypass-list=*")
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument('--headless=new')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument('--allow-running-insecure-content')
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+    chrome_options.add_argument(f'user-agent={user_agent}')
+    driver = webdriver.Chrome(options=chrome_options)
     try:
         driver.implicitly_wait(2)
         driver.get(url)
@@ -190,7 +252,21 @@ def all_time_winner_club():
 def top_scorers_seasons():
     url = 'https://www.worldfootball.net/top_scorer/eng-premier-league/'
     headers = ['Season', '#', 'Top scorer', '#', 'Team', 'Goals']
-    driver = webdriver.Chrome()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--proxy-server='direct://'")
+    chrome_options.add_argument("--proxy-bypass-list=*")
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument('--headless=new')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument('--allow-running-insecure-content')
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+    chrome_options.add_argument(f'user-agent={user_agent}')
+    driver = webdriver.Chrome(options=chrome_options)
 
     try:
         driver.implicitly_wait(2)
@@ -215,7 +291,21 @@ def top_scorers_seasons():
 def goals_per_season():
     url = 'https://www.worldfootball.net/stats/eng-premier-league/1/'
     headers = []
-    driver = webdriver.Chrome()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--proxy-server='direct://'")
+    chrome_options.add_argument("--proxy-bypass-list=*")
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument('--headless=new')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument('--allow-running-insecure-content')
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+    chrome_options.add_argument(f'user-agent={user_agent}')
+    driver = webdriver.Chrome(options=chrome_options)
 
     try:
         driver.implicitly_wait(2)
@@ -242,5 +332,5 @@ def goals_per_season():
 
 
 
-# if __name__ == "__main__":
-#     print(goals_per_season())
+if __name__ == "__main__":
+      print(player_table())
