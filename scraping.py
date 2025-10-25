@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 import pandas as pd
 
 def league_table():
@@ -119,30 +120,31 @@ def detail_top():
 
 
 def player_table():
-    url = [f'https://www.worldfootball.net/players_list/eng-premier-league-2023-2024/nach-name/{i:d}' for i in (range(1,12))]
+    urls = [f'https://www.worldfootball.net/players_list/eng-premier-league-2023-2024/nach-name/{i:d}' for i in (range(1,12))]
     header = ['Player','','Team', 'born', 'Height', 'Position']
     df = pd.DataFrame(columns = header)
+
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--proxy-server='direct://'")
+    chrome_options.add_argument("--proxy-bypass-list=*")
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument('--headless=new')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument('--allow-running-insecure-content')
+    chrome_options.add_argument("enable-features=NetworkServiceInProcess")
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+    chrome_options.add_argument(f'user-agent={user_agent}')
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.set_page_load_timeout(30)
 
     def player(ev):
         url = ev
         headers = []
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument("--disable-extensions")
-        chrome_options.add_argument("--proxy-server='direct://'")
-        chrome_options.add_argument("--proxy-bypass-list=*")
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--headless=new')
-        chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--allow-running-insecure-content')
-        chrome_options.add_argument("enable-features=NetworkServiceInProcess")
-        user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
-        chrome_options.add_argument(f'user-agent={user_agent}')
-        driver = webdriver.Chrome(options=chrome_options)
-        driver.set_page_load_timeout(30)
 
         try:
             driver.get(url)
@@ -158,14 +160,16 @@ def player_table():
                 row = [i.text for i in row_data]
                 length = len(players)
                 players.loc[length] = row
-        finally:
-            driver.quit()
+        except TimeoutException:
+            print(f"Timeout while loading page: {url}")
         return players
-    
-    for i in url:
-        data = player(i)
-        df = pd.concat([df, data], axis=0).reset_index(drop=True)
-    
+    try:
+        
+        for i in urls:
+            data = player(i)
+            df = pd.concat([df, data], axis=0).reset_index(drop=True)
+    finally:
+        driver.quit()
     df = df.drop([''],axis=1)
 
     return df
