@@ -160,9 +160,12 @@ def player_table():
                 row = [i.text for i in row_data]
                 length = len(players)
                 players.loc[length] = row
+
+            return players
+        
         except TimeoutException:
             print(f"Timeout while loading page: {url}")
-        return players
+       
     try:
         
         for i in urls:
