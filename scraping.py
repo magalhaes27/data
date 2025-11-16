@@ -91,7 +91,7 @@ def detail_top():
 
     try:
         driver.get(url)
-        driver.implicitly_wait(2)
+        driver.implicitly_wait(30)
         table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
 
         for i in table.find_elements(By.TAG_NAME,'th'):
@@ -140,7 +140,7 @@ def player_table():
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
     chrome_options.add_argument(f'user-agent={user_agent}')
     driver = webdriver.Chrome(options=chrome_options)
-    driver.set_page_load_timeout(30)
+    driver.implicitly_wait(30)
 
     def player(ev):
         url = ev
@@ -199,7 +199,7 @@ def all_time_table():
     driver.set_page_load_timeout(30)
 
     try:    
-        driver.implicitly_wait(2)
+        driver.implicitly_wait(30)
         driver.get(url)
         table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
         all_time_table = pd.DataFrame(columns = headers)
@@ -234,9 +234,8 @@ def all_time_winner_club():
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
     chrome_options.add_argument(f'user-agent={user_agent}')
     driver = webdriver.Chrome(options=chrome_options)
-    driver.set_page_load_timeout(30)
     try:
-        driver.implicitly_wait(2)
+        driver.implicitly_wait(30)
         driver.get(url)
         table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
 
@@ -277,10 +276,10 @@ def top_scorers_seasons():
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
     chrome_options.add_argument(f'user-agent={user_agent}')
     driver = webdriver.Chrome(options=chrome_options)
-    driver.set_page_load_timeout(30)
+
 
     try:
-        driver.implicitly_wait(2)
+        driver.implicitly_wait(30)
         driver.get(url)
         table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
         top_scorer = pd.DataFrame(columns = headers)
@@ -317,10 +316,10 @@ def goals_per_season():
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
     chrome_options.add_argument(f'user-agent={user_agent}')
     driver = webdriver.Chrome(options=chrome_options)
-    driver.set_page_load_timeout(30)
+    
 
     try:
-        driver.implicitly_wait(2)
+        driver.implicitly_wait(30)
         driver.get(url)
         table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
 
@@ -345,4 +344,4 @@ def goals_per_season():
 
 
 if __name__ == "__main__":
-      print(player_table())
+      print(top_scorers())
