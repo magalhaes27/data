@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-functions = [league_table, top_scorers, detail_top, all_time_table, all_time_winner_club, top_scorers_seasons, goals_per_season, player_table]
+functions = [league_table, top_scorers, detail_top, all_time_table, all_time_winner_club, top_scorers_seasons]
 
 def to_blob(func):
     '''

@@ -87,12 +87,13 @@ def detail_top():
     chrome_options.add_argument(f'user-agent={user_agent}')
     # Initialize WebDriver
     driver = webdriver.Chrome(options=chrome_options)
+    driver.set_page_load_timeout(30)
 
 
     try:
         driver.get(url)
-        driver.implicitly_wait(30)
-        table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
+        driver.implicitly_wait(10)
+        table = driver.find_element(By.CLASS_NAME,"module-statistics.statistics")
 
         for i in table.find_elements(By.TAG_NAME,'th'):
             title = i.text
@@ -106,12 +107,9 @@ def detail_top():
             detail_top_scorer.loc[length] = row
 
         detail_top_scorer = detail_top_scorer.drop([''],axis=1)
-        detail_top_scorer['Team'] = detail_top_scorer['Team'].str.replace(r'\n+|\t+','', regex=True)
-        detail_top_scorer['Penalty'] = detail_top_scorer['Goals (Penalty)'].str.split().str[-1:].str.join(' ')
-        detail_top_scorer['Penalty'] = detail_top_scorer['Penalty'].str.replace('(','')
-        detail_top_scorer['Penalty'] = detail_top_scorer['Penalty'].str.replace(')','')
-        detail_top_scorer['Goals (Penalty)'] = detail_top_scorer['Goals (Penalty)'].str.split().str[0].str.join('')
-        detail_top_scorer.rename(columns = {'Goals (Penalty)':'Goals'}, inplace = True)
+        detail_top_scorer[['Player', 'Team']] = detail_top_scorer['Player'].str.split(r'\n+|\t+', regex=True, expand=True)
+        detail_top_scorer.insert(2,'Team', detail_top_scorer.pop('Team'))
+        detail_top_scorer.rename(columns = {'11m':' Penalty Goals'}, inplace = True)
         detail_top_scorer = detail_top_scorer.drop(['#'], axis = 1)
     finally:
         driver.quit()
@@ -119,67 +117,68 @@ def detail_top():
     return detail_top_scorer
 
 
-def player_table():
-    urls = [f'https://www.worldfootball.net/players_list/eng-premier-league-2023-2024/nach-name/{i:d}' for i in (range(1,12))]
-    header = ['Player','','Team', 'born', 'Height', 'Position']
-    df = pd.DataFrame(columns = header)
+# def player_table():
+#     urls = [f'https://www.worldfootball.net/players_list/eng-premier-league-2023-2024/nach-name/{i:d}' for i in (range(1,12))]
+#     header = ['Player','','Team', 'born', 'Height', 'Position']
+#     df = pd.DataFrame(columns = header)
 
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_argument("--proxy-server='direct://'")
-    chrome_options.add_argument("--proxy-bypass-list=*")
-    chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument('--headless=new')
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--ignore-certificate-errors')
-    chrome_options.add_argument('--allow-running-insecure-content')
-    chrome_options.add_argument("enable-features=NetworkServiceInProcess")
-    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
-    chrome_options.add_argument(f'user-agent={user_agent}')
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.implicitly_wait(30)
+#     chrome_options = webdriver.ChromeOptions()
+#     chrome_options.add_argument("--window-size=1920,1080")
+#     chrome_options.add_argument("--disable-extensions")
+#     chrome_options.add_argument("--proxy-server='direct://'")
+#     chrome_options.add_argument("--proxy-bypass-list=*")
+#     chrome_options.add_argument("--start-maximized")
+#     chrome_options.add_argument('--headless=new')
+#     chrome_options.add_argument('--disable-gpu')
+#     chrome_options.add_argument('--disable-dev-shm-usage')
+#     chrome_options.add_argument('--no-sandbox')
+#     chrome_options.add_argument('--ignore-certificate-errors')
+#     chrome_options.add_argument('--allow-running-insecure-content')
+#     chrome_options.add_argument("enable-features=NetworkServiceInProcess")
+#     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+#     chrome_options.add_argument(f'user-agent={user_agent}')
+#     driver = webdriver.Chrome(options=chrome_options)
+#     driver.set_page_load_timeout(30)
 
-    def player(ev):
-        url = ev
-        headers = []
+#     def player(ev):
+#         url = ev
+#         headers = []
 
-        try:
-            driver.get(url)
-            table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
+#         try:
+#             driver.implicitly_wait(10)
+#             driver.get(url)
+#             table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
 
-            for i in table.find_elements(By.TAG_NAME,'th'):
-                title = i.text
-                headers.append(title)
-            players = pd.DataFrame(columns = headers)
+#             for i in table.find_elements(By.TAG_NAME,'th'):
+#                 title = i.text
+#                 headers.append(title)
+#             players = pd.DataFrame(columns = headers)
 
-            for j in table.find_elements(By.TAG_NAME,'tr')[1:]:
-                row_data = j.find_elements(By.TAG_NAME,'td')
-                row = [i.text for i in row_data]
-                length = len(players)
-                players.loc[length] = row
+#             for j in table.find_elements(By.TAG_NAME,'tr')[1:]:
+#                 row_data = j.find_elements(By.TAG_NAME,'td')
+#                 row = [i.text for i in row_data]
+#                 length = len(players) # check current length of df
+#                 players.loc[length] = row # insert a new row in df ej: df.loc[5] = [data1, data2, data3]
 
-            return players
+#             return players
         
-        except TimeoutException:
-            print(f"Timeout while loading page: {url}")
+#         except TimeoutException:
+#             print(f"Timeout while loading page: {url}")
        
-    try:
+#     try:
         
-        for i in urls:
-            data = player(i)
-            df = pd.concat([df, data], axis=0).reset_index(drop=True)
-    finally:
-        driver.quit()
-    df = df.drop([''],axis=1)
+#         for i in urls:
+#             data = player(i)
+#             df = pd.concat([df, data], axis=0).reset_index(drop=True)
+#     finally:
+#         driver.quit()
+#     df = df.drop([''],axis=1)
 
-    return df
+#     return df
 
 def all_time_table():
     url = 'https://www.worldfootball.net/alltime_table/eng-premier-league/pl-only/'
-    headers = ['Pos', '#', 'Team', 'Matches', 'Wins', 'Draws', 'Losses', 'Goals', 'Dif', 'Points']
+    headers = ['Pos', '#','Team','##', '###', 'Matches', 'Wins', 'Draws', 'Losses', 'Goals', 'Diff', 'Points']
 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--window-size=1920,1080")
@@ -199,9 +198,9 @@ def all_time_table():
     driver.set_page_load_timeout(30)
 
     try:    
-        driver.implicitly_wait(30)
+        driver.implicitly_wait(10)
         driver.get(url)
-        table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
+        table = driver.find_element(By.CSS_SELECTOR, "table[data-competition_id='91']")
         all_time_table = pd.DataFrame(columns = headers)
 
         for j in table.find_elements(By.TAG_NAME,'tr')[1:]:
@@ -210,7 +209,7 @@ def all_time_table():
             length = len(all_time_table)
             all_time_table.loc[length] = row
         
-        all_time_table = all_time_table.drop(['#'],axis=1)
+        all_time_table = all_time_table.drop(['#','##','###'],axis=1)
         all_time_table['Team'] = all_time_table['Team'].str.replace(r'\n+|\t+','', regex=True)
     finally:
         driver.quit()
@@ -218,7 +217,7 @@ def all_time_table():
 
 def all_time_winner_club():
     url = 'https://www.worldfootball.net/winner/eng-premier-league/'
-    headers = []
+    headers = ['Year','','Team','Total_Titles']
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--disable-extensions")
@@ -234,14 +233,11 @@ def all_time_winner_club():
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
     chrome_options.add_argument(f'user-agent={user_agent}')
     driver = webdriver.Chrome(options=chrome_options)
+    driver.set_page_load_timeout(30)
     try:
-        driver.implicitly_wait(30)
+        driver.implicitly_wait(10)
         driver.get(url)
-        table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
-
-        for i in table.find_elements(By.TAG_NAME,'th'):
-            title = i.text
-            headers.append(title)
+        table = driver.find_element(By.TAG_NAME,"table")
         winners = pd.DataFrame(columns = headers)
 
         for j in table.find_elements(By.TAG_NAME,'tr')[1:]:
@@ -251,7 +247,7 @@ def all_time_winner_club():
             winners.loc[length] = row
 
         winners = winners.drop([''],axis=1)
-        winners['Year'] = winners['Year'].str.replace(r'\n+|\t+','', regex=True)
+        winners['Total_Titles'] = winners['Total_Titles'].str.replace(r'(|)','', regex=True)
     finally:
         driver.quit()
 
@@ -260,7 +256,7 @@ def all_time_winner_club():
 
 def top_scorers_seasons():
     url = 'https://www.worldfootball.net/top_scorer/eng-premier-league/'
-    headers = ['Season', '#', 'Top scorer', '#', 'Team', 'Goals']
+    headers = ['Season', '#', 'Top scorer', 'Goals']
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--disable-extensions")
@@ -276,12 +272,12 @@ def top_scorers_seasons():
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
     chrome_options.add_argument(f'user-agent={user_agent}')
     driver = webdriver.Chrome(options=chrome_options)
-
+    driver.set_page_load_timeout(30)
 
     try:
-        driver.implicitly_wait(30)
+        driver.implicitly_wait(10)
         driver.get(url)
-        table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
+        table = driver.find_element(By.TAG_NAME,"table")
         top_scorer = pd.DataFrame(columns = headers)
 
         for j in table.find_elements(By.TAG_NAME,'tr')[1:]:
@@ -298,50 +294,50 @@ def top_scorers_seasons():
 
     return top_scorer
 
-def goals_per_season():
-    url = 'https://www.worldfootball.net/stats/eng-premier-league/1/'
-    headers = []
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_argument("--proxy-server='direct://'")
-    chrome_options.add_argument("--proxy-bypass-list=*")
-    chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument('--headless=new')
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--ignore-certificate-errors')
-    chrome_options.add_argument('--allow-running-insecure-content')
-    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
-    chrome_options.add_argument(f'user-agent={user_agent}')
-    driver = webdriver.Chrome(options=chrome_options)
-    
+# def goals_per_season():
+#     url = 'https://www.worldfootball.net/stats/eng-premier-league/1/'
+#     headers = []
+#     chrome_options = webdriver.ChromeOptions()
+#     chrome_options.add_argument("--window-size=1920,1080")
+#     chrome_options.add_argument("--disable-extensions")
+#     chrome_options.add_argument("--proxy-server='direct://'")
+#     chrome_options.add_argument("--proxy-bypass-list=*")
+#     chrome_options.add_argument("--start-maximized")
+#     chrome_options.add_argument('--headless=new')
+#     chrome_options.add_argument('--disable-gpu')
+#     chrome_options.add_argument('--disable-dev-shm-usage')
+#     chrome_options.add_argument('--no-sandbox')
+#     chrome_options.add_argument('--ignore-certificate-errors')
+#     chrome_options.add_argument('--allow-running-insecure-content')
+#     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+#     chrome_options.add_argument(f'user-agent={user_agent}')
+#     driver = webdriver.Chrome(options=chrome_options)
+#     driver.set_page_load_timeout(30)
 
-    try:
-        driver.implicitly_wait(30)
-        driver.get(url)
-        table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
+#     try:
+#         driver.implicitly_wait(10)
+#         driver.get(url)
+#         table = driver.find_element(By.CLASS_NAME,"standard_tabelle")
 
-        for i in table.find_elements(By.TAG_NAME,'th'):
-            title = i.text
-            headers.append(title)
-        goals_per_season = pd.DataFrame(columns = headers)
+#         for i in table.find_elements(By.TAG_NAME,'th'):
+#             title = i.text
+#             headers.append(title)
+#         goals_per_season = pd.DataFrame(columns = headers)
 
-        for j in table.find_elements(By.TAG_NAME,'tr')[1:]:
-            row_data = j.find_elements(By.TAG_NAME,'td')
-            row = [i.text for i in row_data]
-            length = len(goals_per_season)
-            goals_per_season.loc[length] = row
-        goals_per_season.drop(goals_per_season.index[-1], inplace=True)
-        goals_per_season = goals_per_season.drop(['#'],axis=1)
-        goals_per_season.rename(columns = {'goals': 'Goals', 'Ø goals':'Average Goals'}, inplace = True)
-    finally:
-        driver.quit()
+#         for j in table.find_elements(By.TAG_NAME,'tr')[1:]:
+#             row_data = j.find_elements(By.TAG_NAME,'td')
+#             row = [i.text for i in row_data]
+#             length = len(goals_per_season)
+#             goals_per_season.loc[length] = row
+#         goals_per_season.drop(goals_per_season.index[-1], inplace=True)
+#         goals_per_season = goals_per_season.drop(['#'],axis=1)
+#         goals_per_season.rename(columns = {'goals': 'Goals', 'Ø goals':'Average Goals'}, inplace = True)
+#     finally:
+#         driver.quit()
 
-    return goals_per_season
+#     return goals_per_season
 
 
 
 if __name__ == "__main__":
-      print(top_scorers())
+      print(top_scorers_seasons())
