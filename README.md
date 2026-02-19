@@ -1,6 +1,6 @@
-# Azure Blob Storage Data Pipeline
+# Premier League Data Pipeline
 
-This project automates the process of extracting data, converting it to Parquet format, and uploading it to Azure Blob Storage. The pipeline is designed to work with multiple data extraction functions, making it modular and reusable.
+This project automates the process of extracting data from football website, converting it to Parquet format, and uploading it to Azure Blob Storage. The pipeline is designed to work with multiple data extraction functions, making it modular and reusable.
 
 ## Features
 - Extracts data using user-defined functions.
@@ -24,4 +24,4 @@ This project automates the process of extracting data, converting it to Parquet 
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone 
+git clone 
