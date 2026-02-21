@@ -1,4 +1,5 @@
-# Premier League Data Pipeline
+![architecture used](utils/architecture_design.drawio-2.png)
+**Premier League Data Pipeline**
 
 This project automates the process of extracting data from football website, converting it to Parquet format, and uploading it to Azure Blob Storage. The pipeline is designed to work with multiple data extraction functions, making it modular and reusable.
 

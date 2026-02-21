@@ -1,4 +1,4 @@
-from scraping import *
+from src.scraping import *
 from datetime import datetime
 import pandas as pd
 import pyarrow as pa
