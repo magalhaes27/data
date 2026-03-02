@@ -31,4 +31,4 @@ jobs:
         env:
           BLOB_CONNECTION_KEY: ${{ secrets.BLOB_CONNECTION_KEY }} # Azure Blob Storage connection string
           AZURE_CONTAINER_NAME: ${{ secrets.AZURE_CONTAINER_NAME }}
-        run: python main.py
+        run: python src/main.py
