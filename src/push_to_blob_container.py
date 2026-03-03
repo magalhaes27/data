@@ -44,7 +44,7 @@ def to_blob(func):
     container_name = os.getenv('AZURE_CONTAINER_NAME')
     # add the raw folder and timestamp to the blob name
     timestamp = datetime.now().strftime("%Y-%m-%d")  # Format: YYYY-MM-DD_HH-MM-SS
-    blob_name = f"raw/{file_name}_{timestamp}.parquet"
+    blob_name = f"raw/{file_name}.parquet"
     container_client = blob_service_client.get_container_client(container_name)
 
     blob_client = container_client.get_blob_client(blob_name)
